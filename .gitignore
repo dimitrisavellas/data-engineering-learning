@@ -1,0 +1,47 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Editors / OS
+.DS_Store
+.idea
+.history
+.ipynb_checkpoints/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.json.key
+*credentials*.json
+*service-account*.json
+keys/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!example.tfvars
+
+# Data
+data/
+**/ny_taxi_postgres_data/
+*.csv
+*.csv.gz
+*.gz
+*.parquet
+*.duckdb
+
+# Logs / tooling
+**/logs/
+serving_dir
+.ruff_cache/
