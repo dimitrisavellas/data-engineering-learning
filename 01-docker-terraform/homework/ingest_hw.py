@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -12,7 +13,13 @@ def write_table(df: pd.DataFrame, table: str, engine) -> None:
 
 
 def main() -> None:
-    engine = create_engine("postgresql://root:root@localhost:5432/data_homework")
+    parser = argparse.ArgumentParser(
+        description="Ingest homework taxi data into Postgres"
+    )
+    parser.add_argument("--pg-host", default="localhost", help="Postgres host")
+    args = parser.parse_args()
+
+    engine = create_engine(f"postgresql://root:root@{args.pg_host}:5432/data_homework")
 
     trips = pd.read_parquet(DATA_DIR / "green_tripdata_2025-11.parquet")
     zones = pd.read_csv(DATA_DIR / "taxi_zone_lookup.csv")

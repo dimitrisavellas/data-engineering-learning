@@ -148,3 +148,29 @@ solution:
  GROUP BY zdo."Zone"
  ORDER BY tip DESC
  LIMIT 1;`
+
+## How the setup is built
+
+`ingest_hw.py` loads the November 2025 green taxi trips and the zone lookup into the `data_homework` Postgres database. It takes one flag, `--pg-host`, so the same script runs on my machine and inside a container. The image only holds the dependencies and the script; the `data/` folder is mounted at run time.
+
+Host name: `localhost` from my machine, `pgdatabase` from inside a container.
+
+### Docker only
+
+Run from `homework/`:
+
+1. `docker network create pg-network`
+2. `docker run -d --rm --network=pg-network --name pgdatabase -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -e POSTGRES_DB=data_homework -v $(pwd)/homework_postgres_data:/var/lib/postgresql -p 5432:5432 postgres:18`
+3. `docker run -d --rm --network=pg-network --name pgadmin -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=root -v pgadmin_data:/var/lib/pgadmin -p 8085:80 dpage/pgadmin4`
+4. `docker build -t taxi_ingest_hw:v001 .`
+5. `docker run -it --rm --network=pg-network -v $(pwd)/data:/app/data taxi_ingest_hw:v001 --pg-host=pgdatabase`
+6. `docker stop pgdatabase pgadmin`
+
+### Docker Compose
+
+Run from `homework/`:
+
+1. `docker compose up -d`
+2. `docker compose ps`
+3. `docker compose run --rm ingest`
+4. `docker compose down`
